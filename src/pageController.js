@@ -9,7 +9,7 @@ async function scrapeAll(browserInstance){
         scrapedData = await pageScraper.scraper(browser);
         await browser.close();
 
-        fs.writeFile("journal.json", JSON.stringify(scrapedData), 'utf8', function(err) {
+        fs.writeFile("journal-management-2021.json", JSON.stringify(scrapedData), 'utf8', function(err) {
             if(err) {
                 return console.log(err);
             }

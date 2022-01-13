@@ -1,8 +1,11 @@
+const userAgent = require("user-agents");
+
 const scraperObject = {
-  url: "http://scholar.google.com/scholar?q=site:openlibrarypublications.telkomuniversity.ac.id",
+  url: "https://scholar.google.com/scholar?as_ylo=2021&q=site:https://openlibrarypublications.telkomuniversity.ac.id/index.php/management&hl=en&as_sdt=0,5",
   async scraper(browser) {
     let page = await browser.newPage();
     console.log(`Navigating to ${this.url}...`);
+    await page.setUserAgent(userAgent.toString());
     // Navigate to the selected page
     await page.goto(this.url);
     let scrapedData = [];
