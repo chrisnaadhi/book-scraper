@@ -70,20 +70,20 @@ const scraperObject = {
         scrapedData.push(currentPageData);
       }
 
-    //   let nextButtonExist = false;
-    //   let nextDom = 'button.gs_btnPR.gs_in_ib.gs_btn_lrge.gs_btn_half.gs_btn_lsu:nth-child(2)'
-    //   try {
-    //     const nextButton = await page.$eval(nextDom, a => a.textContent)
-    //     nextButtonExist = true;
-    //   } catch(err) {
-    //     nextButtonExist = false;
-    //     console.log(err)
-    //   }
+      let nextButtonExist = false;
+      let nextDom = 'button.gs_btnPR.gs_in_ib.gs_btn_lrge.gs_btn_half.gs_btn_lsu:nth-child(2)'
+      try {
+        const nextButton = await page.$eval(nextDom, a => a.textContent)
+        nextButtonExist = true;
+      } catch(err) {
+        nextButtonExist = false;
+        console.log(err)
+      }
 
-    //   if(nextButtonExist){
-    //       await page.click(nextDom);
-    //       return scrapeCurrentPage();
-    //   }
+      if(nextButtonExist){
+          await page.click(nextDom);
+          return scrapeCurrentPage();
+      }
       await page.close();
       return scrapedData;
     }
