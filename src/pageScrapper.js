@@ -6,11 +6,11 @@ const scraperObject = {
     console.log(`Navigating to ${this.url}...`);
     // Navigate to the selected page
     await page.goto(this.url);
-    await page.waitForNavigation({'waitUntil': 'networkidle0'});
+    // await page.waitForNavigation();
     let scrapedData = [];
     async function scrapeCurrentPage() {
       // Wait for the required DOM to be rendered
-      await page.waitForSelector("#gs_bdy", { visible: true, timeout: 0 });
+      await page.waitForSelector("#gs_bdy");
       // Get the link to all the required journal
       let citation = await page.$$eval(
         "#gs_res_ccl_mid > .gs_r > .gs_ri",
@@ -71,23 +71,24 @@ const scraperObject = {
         let currentPageData = await pagePromise(urls[link]);
         currentPageData["journalCitation"] = citation[link];
         scrapedData.push(currentPageData);
+        console.log("Scraped 10 Data from this page")
       }
 
-      // let nextButtonExist = false;
-      // let nextDom =
-      //   "#gs_nm:nth-child(3) > button.gs_btnPR.gs_in_ib.gs_btn_lrge.gs_btn_half.gs_btn_lsu:nth-child(2)";
-      // try {
-      //   const nextButton = await page.$eval(nextDom, (a) => a.textContent);
-      //   nextButtonExist = true;
-      // } catch (err) {
-      //   nextButtonExist = false;
-      //   console.log(err);
-      // }
+      let nextButtonExist = false;
+      let nextDom =
+        "#gs_nm:nth-child(3) > button.gs_btnPR.gs_in_ib.gs_btn_lrge.gs_btn_half.gs_btn_lsu:nth-child(2)";
+      try {
+        const nextButton = await page.$eval(nextDom, (a) => a.textContent);
+        nextButtonExist = true;
+      } catch (err) {
+        nextButtonExist = false;
+        console.log(err);
+      }
 
-      // if (nextButtonExist) {
-      //   await page.click(nextDom);
-      //   return scrapeCurrentPage();
-      // }
+      if (nextButtonExist) {
+        await page.click(nextDom);
+        return scrapeCurrentPage();
+      }
       await page.close();
       return scrapedData;
     }
