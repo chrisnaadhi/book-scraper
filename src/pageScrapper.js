@@ -1,11 +1,14 @@
-const userAgent = require("user-agents");
+// const randomUseragent = require('random-useragent')
+const USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36';
 
 const scraperObject = {
-  url: "https://scholar.google.com/scholar?as_ylo=2021&q=site:https://openlibrarypublications.telkomuniversity.ac.id/index.php/management&hl=en&as_sdt=0,5",
+  url: "https://scholar.google.com/scholar?start=0&q=site:openlibrarypublications.telkomuniversity.ac.id/index.php/management",
   async scraper(browser) {
+    // const userAgent = randomUseragent.getRandom();
+    // const UA = USER_AGENT;
     let page = await browser.newPage();
+    // await page.setUserAgent(UA)
     console.log(`Navigating to ${this.url}...`);
-    await page.setUserAgent(userAgent.toString());
     // Navigate to the selected page
     await page.goto(this.url);
     let scrapedData = [];
@@ -74,7 +77,7 @@ const scraperObject = {
       }
 
       let nextButtonExist = false;
-      let nextDom = 'button.gs_btnPR.gs_in_ib.gs_btn_lrge.gs_btn_half.gs_btn_lsu:nth-child(2)'
+      let nextDom = '#gs_nm:nth-child(3) > button.gs_btnPR.gs_in_ib.gs_btn_lrge.gs_btn_half.gs_btn_lsu:nth-child(2)'
       try {
         const nextButton = await page.$eval(nextDom, a => a.textContent)
         nextButtonExist = true;
