@@ -1,14 +1,16 @@
-const puppeteer = require("puppeteer-extra")
-const StealthPlugin = require("puppeteer-extra-plugin-stealth")
+const puppeteer = require("puppeteer-extra");
+const stealthPlugin = require("puppeteer-extra-plugin-stealth");
+const UserAgent = require("user-agents");
+const userAgent = new UserAgent();
 
 async function startBrowser() {
   let browser;
   try {
-    puppeteer.use(StealthPlugin());
     console.log("Opening the Browser...");
+    puppeteer.use(stealthPlugin());
     browser = await puppeteer.launch({
       headless: false,
-      args: ["--disable-setuid-sandbox"],
+      args: ["--user-agent=" + userAgent + "", "--enable-automation","--disable-setuid-sandbox", '--disable-web-security'],
       ignoreHTTPSErrors: true,
     });
   } catch (err) {
