@@ -1,5 +1,5 @@
 const scraperObject = {
-  url: "https://scholar.google.com/scholar?hl=en&start=0&q=site:openlibrarypublications.telkomuniversity.ac.id/index.php/management",
+  url: "https://scholar.google.com/scholar?q=site:openlibrarypublications.telkomuniversity.ac.id/index.php/management&hl=id&as_sdt=0,5&as_ylo=2019&as_yhi=2019",
   async scraper(browser) {
     let page = await browser.newPage();
     // await page.setRequestInterception(true);
@@ -10,7 +10,13 @@ const scraperObject = {
     let scrapedData = [];
     async function scrapeCurrentPage() {
       // Wait for the required DOM to be rendered
-      await page.waitForSelector("#gs_bdy");
+      try {
+        await page.waitForSelector("#gs_bdy");
+      } catch(err) {
+        console.log('seems like got captcha wait for solved');
+        await page.waitFor(10000);
+        await page.waitForSelector("#gs_bdy");
+      }
       // Get the link to all the required journal
       let citation = await page.$$eval(
         "#gs_res_ccl_mid > .gs_r > .gs_ri",
@@ -40,25 +46,39 @@ const scraperObject = {
               splitted.pop();
               let joined = splitted.join("/").replace("download", "view");
               link = joined;
+            } else if (link.includes("viewFile")) {
+              let splitted = link.split("/");
+              splitted.pop();
+              let joined = splitted.join("/").replace("viewFile", "view");
+              link = joined;
+            } else {
+              console.log(`${link} is fine`);
             }
-            await newPage.goto(link);
-            dataObj["eProceedings"] = await newPage.$eval(
-              "#headerTitle > figure > h1",
-              (text) =>
-                (text = text.textContent.replace(/(\r\n\t|\n|\r|\t)/gm, ""))
-            );
-            dataObj["journalTitle"] = await newPage.$eval(
-              "#articleTitle > h3",
-              (text) => text.textContent
-            );
-            dataObj["journalAuthor"] = await newPage.$eval(
-              "#authorString",
-              (text) => text.textContent
-            );
-            dataObj["journalPubVolume"] = await newPage.$eval(
-              "#breadcrumb > a:nth-child(2)",
-              (text) => text.textContent
-            );
+            await newPage.goto(link)
+            try {dataObj["eProceedings"] = await newPage.$eval(
+                "#headerTitle > figure > h1",
+                (text) =>
+                  (text = text.textContent.replace(/(\r\n\t|\n|\r|\t)/gm, ""))
+              );
+              dataObj["journalTitle"] = await newPage.$eval(
+                "#articleTitle > h3",
+                (text) => text.textContent
+              );
+              dataObj["journalAuthor"] = await newPage.$eval(
+                "#authorString",
+                (text) => text.textContent
+              );
+              dataObj["journalPubVolume"] = await newPage.$eval(
+                "#breadcrumb > a:nth-child(2)",
+                (text) => text.textContent
+              );
+            } catch(err) {
+              console.log("Error! check link")
+              dataObj["eProceedings"] = "Manajemen"
+              dataObj["journalTitle"] = "Manajemen"
+              dataObj["journalAuthor"] = "ERROR"
+              dataObj["journalPubVolume"] = link
+            }
 
             resolve(dataObj);
             await newPage.close();
@@ -71,14 +91,14 @@ const scraperObject = {
         let currentPageData = await pagePromise(urls[link]);
         currentPageData["journalCitation"] = citation[link];
         scrapedData.push(currentPageData);
-        console.log("Scraped 10 Data from this page")
       }
 
       let nextButtonExist = false;
-      let nextDom =
-        "#gs_nm:nth-child(3) > button.gs_btnPR.gs_in_ib.gs_btn_lrge.gs_btn_half.gs_btn_lsu:nth-child(2)";
+      // let nextDomMobile = "#gs_nm:nth-child(3) > button.gs_btnPR.gs_in_ib.gs_btn_lrge.gs_btn_half.gs_btn_lsu:nth-child(2)";
+      let nextDomWeb = "#gs_n > center > table > tbody > tr > td:nth-child(12) > a"
       try {
-        const nextButton = await page.$eval(nextDom, (a) => a.textContent);
+        // const nextButton = await page.$eval(nextDomMobile, (a) => a.textContent);
+        const nextBtn = await page.$eval(nextDomWeb, (a) => a.textContent); 
         nextButtonExist = true;
       } catch (err) {
         nextButtonExist = false;
@@ -86,14 +106,18 @@ const scraperObject = {
       }
 
       if (nextButtonExist) {
-        await page.click(nextDom);
+        // await page.click(nextDomMobile);
+        
+        await page.click(nextDomWeb)
         return scrapeCurrentPage();
+      } else {
+        console.log(`No More Data to fetch`)
       }
       await page.close();
       return scrapedData;
     }
     let data = await scrapeCurrentPage();
-    console.log(data);
+    console.log('Data has been scraped, proceeding to save...')
     return data;
   },
 };
