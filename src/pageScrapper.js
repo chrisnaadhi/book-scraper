@@ -1,20 +1,20 @@
 const scraperObject = {
-  url: "https://scholar.google.com/scholar?q=site:openlibrarypublications.telkomuniversity.ac.id/index.php/management&hl=id&as_sdt=0,5&as_ylo=2019&as_yhi=2019",
+  url: "https://scholar.google.com/scholar?q=site:openlibrarypublications.telkomuniversity.ac.id/index.php/management&hl=en&as_sdt=0,5&as_ylo=2016&as_yhi=2016",
   async scraper(browser) {
     let page = await browser.newPage();
     // await page.setRequestInterception(true);
     console.log(`Navigating to ${this.url}...`);
     // Navigate to the selected page
     await page.goto(this.url);
-    // await page.waitForNavigation();
+    await page.waitForTimeout(25000);
     let scrapedData = [];
     async function scrapeCurrentPage() {
       // Wait for the required DOM to be rendered
       try {
         await page.waitForSelector("#gs_bdy");
       } catch(err) {
-        console.log('seems like got captcha wait for solved');
-        await page.waitFor(10000);
+        console.log('seems like got captcha to be solved');
+        await page.waitForTimeout(25000);
         await page.waitForSelector("#gs_bdy");
       }
       // Get the link to all the required journal
@@ -22,7 +22,7 @@ const scraperObject = {
         "#gs_res_ccl_mid > .gs_r > .gs_ri",
         (cited) => {
           cited = cited.map(
-            (el) => el.querySelectorAll(".gs_fl > a")[2].textContent
+            (el) => el.querySelector(".gs_fl > a:nth-child(3)").textContent
           );
           return cited;
         }
@@ -80,7 +80,9 @@ const scraperObject = {
               dataObj["journalPubVolume"] = link
             }
 
+            await newPage.waitForTimeout(2000);
             resolve(dataObj);
+            
             await newPage.close();
           } catch (err) {
             console.log(err);
@@ -102,13 +104,13 @@ const scraperObject = {
         nextButtonExist = true;
       } catch (err) {
         nextButtonExist = false;
-        console.log(err);
+        console.log("No more Pages... Trying to fetch last page Data...");
       }
 
       if (nextButtonExist) {
         // await page.click(nextDomMobile);
-        
-        await page.click(nextDomWeb)
+        await page.waitForTimeout(2000);
+        await page.click(nextDomWeb);
         return scrapeCurrentPage();
       } else {
         console.log(`No More Data to fetch`)
@@ -117,7 +119,7 @@ const scraperObject = {
       return scrapedData;
     }
     let data = await scrapeCurrentPage();
-    console.log('Data has been scraped, proceeding to save...')
+    console.log('All the Data has been scraped, proceeding to save the data...')
     return data;
   },
 };
