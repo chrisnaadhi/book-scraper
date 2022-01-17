@@ -51,6 +51,11 @@ const scraperObject = {
               splitted.pop();
               let joined = splitted.join("/").replace("viewFile", "view");
               link = joined;
+            } else if (link.split("/").length > 8) {
+              let splitted = link.split("/");
+              splitted.pop();
+              let joined = splitted.join("/");
+              link = joined;
             } else {
               console.log(`${link} is fine`);
             }
