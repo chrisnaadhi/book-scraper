@@ -1,5 +1,9 @@
+// Parameter
+const eproc = "appliedscience";
+const yearPub = "2020";
+
 const scraperObject = {
-  url: "https://scholar.google.com/scholar?q=site:openlibrarypublications.telkomuniversity.ac.id/index.php/management&hl=en&as_sdt=0,5&as_ylo=2016&as_yhi=2016",
+  url: `https://scholar.google.com/scholar?q=site:openlibrarypublications.telkomuniversity.ac.id/index.php/${eproc}&hl=en&as_sdt=0,5&as_ylo=${yearPub}&as_yhi=${yearPub}`,
   async scraper(browser) {
     let page = await browser.newPage();
     // await page.setRequestInterception(true);
@@ -36,7 +40,7 @@ const scraperObject = {
         }
       );
       let pagePromise = (link) =>
-        new Promise(async (resolve, reject) => {
+        new Promise(async (resolve) => {
           let dataObj = {};
           let newPage = await browser.newPage();
 
