@@ -1,5 +1,6 @@
 const pageScraper = require('./pageScrapper');
 const fs = require('fs');
+// Ganti dengan nama file sesuai jurnalnya :
 const fileName = "journal-appliedscience-2020.json";
 
 async function scrapeAll(browserInstance){
