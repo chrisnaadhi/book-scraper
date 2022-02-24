@@ -7,9 +7,15 @@ edit the parameter of the year on pageController & pageScraper
 
 ## Instalasi
 
-Instalasi NodeJS terlebih dahulu, lalu siapkan [VSCode](https://code.visualstudio.com/) untuk mengedit parameter dan menjalankan program menggunakan integrated terminal.
+Instalasi [NodeJS](https://nodejs.org/en/) terlebih dahulu, lalu siapkan [VSCode](https://code.visualstudio.com/) untuk mengedit parameter dan menjalankan program menggunakan integrated terminal.
 
-Download Code menggunakan ZIP, 
+Pastikan Node dan NPM terinstall :
+```bash
+  node --version
+  npm --version
+```
+
+Setelah NodeJS terinstall, silahkan Download Code menggunakan ZIP, 
 
 ![Code ZIP](https://github.com/chrisnaadhi/book-scraper/blob/master/screenshot/1.jpg?raw=true)
 
@@ -20,6 +26,7 @@ lalu setelah itu silahkan install dependensi :
 ```
 
 Setelah diinstall silahkan cek pageScrapper.js dan pageController.js lalu edit parameter sesuai kebutuhan :
+Ganti variabel dengan masing-masing value yang diinginkan
 
 ![Page](https://github.com/chrisnaadhi/book-scraper/blob/master/screenshot/2.jpg?raw=true)
 
