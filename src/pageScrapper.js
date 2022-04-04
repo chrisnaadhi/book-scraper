@@ -61,7 +61,7 @@ const scraperObject = {
               let joined = splitted.join("/");
               link = joined;
             } else {
-              console.log(`${link} is fine`);
+              console.log(`${link}, jurnal ini aman tidak ada kendala dalam URL`);
             }
             await newPage.goto(link)
             try {dataObj["eProceedings"] = await newPage.$eval(
@@ -82,9 +82,9 @@ const scraperObject = {
                 (text) => text.textContent
               );
             } catch(err) {
-              console.log("Error! check link")
-              dataObj["eProceedings"] = "Manajemen"
-              dataObj["journalTitle"] = "Manajemen"
+              console.log("Error! Silahkan cek link jurnalnya")
+              dataObj["eProceedings"] = "Journal Error"
+              dataObj["journalTitle"] = "Jurnal tidak dapat dibuka / diakses"
               dataObj["journalAuthor"] = "ERROR"
               dataObj["journalPubVolume"] = link
             }
@@ -113,7 +113,7 @@ const scraperObject = {
         nextButtonExist = true;
       } catch (err) {
         nextButtonExist = false;
-        console.log("No more Pages... Trying to fetch last page Data...");
+        console.log("Tidak ada halaman selanjutnya... Sedang mencoba mengumpulkan data di halaman terakhir...");
       }
 
       if (nextButtonExist) {
@@ -122,13 +122,13 @@ const scraperObject = {
         await page.click(nextDomWeb);
         return scrapeCurrentPage();
       } else {
-        console.log(`No More Data to fetch`)
+        console.log(`Tidak ada lagi data yang bisa diambil karena ini halaman terakhir`)
       }
       await page.close();
       return scrapedData;
     }
     let data = await scrapeCurrentPage();
-    console.log('All the Data has been scraped, proceeding to save the data...')
+    console.log('Seluruh data berhasil diambil, sedang memproses untuk menyimpan data...')
     return data;
   },
 };
