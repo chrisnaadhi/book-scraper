@@ -1,19 +1,20 @@
 # Book-Journal Scraper
 Scraping Google Scholar Journal for Open Library
 
-Using NodeJS and Puppeteer
-edit the parameter of the year on pageController & pageScraper
+Menggunakan NodeJS dan Puppeteer
+Edit parameter nama jurnal dan tahun di pageController & pageScraper
 
 
 ## Instalasi
 
 Instalasi [NodeJS](https://nodejs.org/en/) terlebih dahulu, lalu siapkan [VSCode](https://code.visualstudio.com/) untuk mengedit parameter dan menjalankan program menggunakan integrated terminal.
 
-Pastikan Node dan NPM terinstall :
+Pastikan Node dan NPM terinstall melalui Integrated Terminal :
 ```bash
   node --version
   npm --version
 ```
+![Terminal](https://github.com/chrisnaadhi/book-scraper/blob/master/screenshot/0.jpg?raw=true)
 
 Setelah NodeJS terinstall, silahkan Download Code menggunakan ZIP, 
 
