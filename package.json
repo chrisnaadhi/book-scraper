@@ -11,6 +11,7 @@
   "author": "Chrisna Adhi Pranoto",
   "license": "ISC",
   "dependencies": {
+    "json-as-xlsx": "^2.4.0",
     "puppeteer": "^13.0.1",
     "puppeteer-extra": "^3.2.3",
     "puppeteer-extra-plugin-stealth": "^2.9.0",
